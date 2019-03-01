@@ -5,6 +5,8 @@ import sys
 import numpy as np
 import tensorflow as tf
 
+from summary_utils import matrix_summary
+
 
 def mc_control(
     env_fn,
@@ -35,8 +37,14 @@ def mc_control(
     assert num_episodes > 0, 'num_episodes must be positive'
     assert method in ['first_visit', 'every_visit'], "method must be 'first_visit' or 'every_visit'"
 
-    # --- Logging ---
-    # TODO
+    # --- Parameter logging ---
+    tf.logging.info(f'ARG epsilon {epsilon}')
+    tf.logging.info(f'ARG gamma {gamma}')
+    tf.logging.info(f'ARG num_episodes {num_episodes}')
+    tf.logging.info(f'ARG method {method}')
+    tf.logging.info(f'ARG base_dir {base_dir}')
+    tf.logging.info(f'ARG exp_name {exp_name}')
+    tf.logging.info(f'ARG seed {seed}')
 
     # --- Initialization ---
     # Summary writer
@@ -46,8 +54,8 @@ def mc_control(
     env = env_fn()
     env.seed(seed)
 
-    num_states = env.nS
-    num_actions = env.nA
+    num_states = env.observation_space.n
+    num_actions = env.action_space.n
 
     # Policy - pi[s] is a vector of probabilities for each action in state s.
     pi = np.full((num_states, num_actions), 1 / num_actions)
@@ -96,11 +104,16 @@ def mc_control(
             visited[state, action] = True
 
         # Write episode summary
-        summary = tf.Summary(value=[
+        statistics_summary = tf.Summary(value=[
             tf.Summary.Value(tag='episode_length', simple_value=len(episode)),
             tf.Summary.Value(tag='episode_return', simple_value=episode_return)
         ])
-        summary_writer.add_summary(summary, global_step=i)
+        qtable_summary = matrix_summary.pb(tag='qtable', data=Q)
+        policy_summary = matrix_summary.pb(tag='policy', data=pi)
+
+        summary_writer.add_summary(statistics_summary, global_step=i)
+        summary_writer.add_summary(qtable_summary, global_step=i)
+        summary_writer.add_summary(policy_summary, global_step=i)
 
     # --- Deinitialization ---
     env.close()
@@ -122,16 +135,18 @@ if __name__ == '__main__':
     parser.add_argument('--seed', '-s', type=int, default=0)
     args = parser.parse_args()
 
-    # TODO: handle custom environments correctly
-    gym_envs = [env.id for env in gym.envs.registry.all()]
-    if args.env not in gym_envs:
-        import lab2.envs.gridworld
-        env_fn = lambda: gym.make('GridWorld-v0')
-    else:
-        env_fn = lambda: gym.make(args.env)
+    # TODO: handle custom environments
+    # gym_envs = [env.id for env in gym.envs.registry.all()]
+    # if args.env not in gym_envs:
+    #     import lab.envs.gridworld
+    #     env_fn = lambda: gym.make('GridWorld-v0')
+    # else:
+    #     env_fn = lambda: gym.make(args.env)
+
+    tf.logging.set_verbosity(tf.logging.INFO)
 
     mc_control(
-        env_fn=env_fn,
+        env_fn=lambda: gym.make(args.env),
         epsilon=args.epsilon,
         gamma=args.gamma,
         method=args.method,
