@@ -52,10 +52,12 @@ def mc_control(
 
     # Environment
     env = env_fn()
-    env.seed(seed)
-
     num_states = env.observation_space.n
     num_actions = env.action_space.n
+
+    # Seeds
+    env.seed(seed)
+    np.random.seed(seed)
 
     # Policy - pi[s] is a vector of probabilities for each action in state s.
     pi = np.full((num_states, num_actions), 1 / num_actions)
@@ -93,9 +95,12 @@ def mc_control(
         for (state, action, reward) in reversed(episode):
             G = gamma * G + reward
             returns[state, action].append(G)
-            if not visited[state, action] or method == 'every-visit':
+            if not visited[state, action] or method == 'every_visit':
+                # Update Q table
                 Q[state, action] = np.mean(returns[state, action])
-                best_action = np.argmax(Q[state])
+                # Improve policy
+                best_actions = np.where(Q[state] == Q[state].max())[0]
+                best_action = np.random.choice(best_actions)
                 for a in np.arange(num_actions):
                     if a == best_action:
                         pi[state, a] = 1 - epsilon + epsilon / num_actions
