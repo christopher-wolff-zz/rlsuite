@@ -5,8 +5,6 @@ import sys
 import numpy as np
 import tensorflow as tf
 
-from summary_utils import matrix_summary
-
 
 def sarsa(
     env_fn,
@@ -108,16 +106,11 @@ def sarsa(
             episode_return += reward
 
         # Write episode summary
-        statistics_summary = tf.Summary(value=[
+        summary = tf.Summary(value=[
             tf.Summary.Value(tag='episode_length', simple_value=episode_length),
             tf.Summary.Value(tag='episode_return', simple_value=episode_return)
         ])
-        qtable_summary = matrix_summary.pb(tag='qtable', data=Q)
-        policy_summary = matrix_summary.pb(tag='policy', data=pi)
-
-        summary_writer.add_summary(statistics_summary, global_step=i)
-        summary_writer.add_summary(qtable_summary, global_step=i)
-        summary_writer.add_summary(policy_summary, global_step=i)
+        summary_writer.add_summary(summary, global_step=i)
 
     # --- Deinitialization ---
     env.close()

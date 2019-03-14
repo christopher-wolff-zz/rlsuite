@@ -5,8 +5,6 @@ import sys
 import numpy as np
 import tensorflow as tf
 
-from summary_utils import matrix_summary
-
 
 def mc_control(
     env_fn,
@@ -113,12 +111,7 @@ def mc_control(
             tf.Summary.Value(tag='episode_length', simple_value=len(episode)),
             tf.Summary.Value(tag='episode_return', simple_value=episode_return)
         ])
-        qtable_summary = matrix_summary.pb(tag='qtable', data=Q)
-        policy_summary = matrix_summary.pb(tag='policy', data=pi)
-
-        summary_writer.add_summary(statistics_summary, global_step=i)
-        summary_writer.add_summary(qtable_summary, global_step=i)
-        summary_writer.add_summary(policy_summary, global_step=i)
+        summary_writer.add_summary(summary, global_step=i)
 
     # --- Deinitialization ---
     env.close()
