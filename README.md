@@ -1,3 +1,3 @@
 # Reinforcement Learning Lab
 
-Lightweight implementations of reinforcement learning algorithms.
+Self-contained implementations of basic reinforcement learning algorithms.
