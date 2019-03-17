@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name='rlsuite',
     version='0.0.1',
-    description='Self-contained implementations of basic reinforcement learning algorithms in TensorFlow.',
+    description='A suite of basic reinforcement learning algorithms and environments.',
     url='http://github.com/christopher-wolff/rlsuite',
     author='Christopher Wolff',
     license='MIT',
