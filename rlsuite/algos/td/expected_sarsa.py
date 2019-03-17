@@ -12,8 +12,8 @@ logger.setLevel(logging.INFO)
 
 
 def sarsa(
-    logdir,
     env_fn,
+    data_dir,
     alpha,
     epsilon,
     gamma,
@@ -24,8 +24,8 @@ def sarsa(
     """On-policy TD control.
 
     Args:
-        logdir (str): The base directory for storing experiment data.
         env_fn (func): A function that creates an instance of an environment.
+        data_dir (str): The base directory for storing experiment data.
         alpha (float): The step size.
         epsilon (float): The exploration rate.
         gamma (float): The discount factor.
@@ -40,7 +40,7 @@ def sarsa(
     assert num_episodes > 0, 'num_episodes must be positive'
 
     # --- Parameter logging ---
-    logger.info(f'ARG logdir {logdir}')
+    logger.info(f'ARG data_dir {data_dir}')
     logger.info(f'ARG alpha {alpha}')
     logger.info(f'ARG epsilon {epsilon}')
     logger.info(f'ARG gamma {gamma}')
@@ -49,7 +49,7 @@ def sarsa(
 
     # --- Initialization ---
     # Summary writer
-    summary_writer = tf.summary.FileWriter(logdir)
+    summary_writer = tf.summary.FileWriter(data_dir)
 
     # Environment
     env = env_fn()
@@ -122,7 +122,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--env', type=str, required=True)
-    parser.add_argument('--logdir', type=str, default='/tmp/exp/expected_sarsa')
+    parser.add_argument('--data_dir', type=str, default='/tmp/exp/expected_sarsa')
     parser.add_argument('--alpha', type=float, default=0.1)
     parser.add_argument('--epsilon', type=float, default=0.1)
     parser.add_argument('--gamma', type=float, default=0.99)
@@ -132,7 +132,7 @@ if __name__ == '__main__':
 
     sarsa(
         env_fn=lambda: gym.make(args.env),
-        logdir=args.logdir,
+        data_dir=args.data_dir,
         alpha=args.alpha,
         epsilon=args.epsilon,
         gamma=args.gamma,

@@ -12,8 +12,8 @@ logger.setLevel(logging.INFO)
 
 
 def mc_control(
-    logdir,
     env_fn,
+    data_dir,
     epsilon,
     gamma,
     num_episodes,
@@ -23,8 +23,8 @@ def mc_control(
     """On-policy Monte Carlo control.
 
     Args:
-        logdir (str): The base directory for storing experiment data.
         env_fn (func): A function that creates an instance of an environment.
+        data_dir (str): The base directory for storing experiment data.
         epsilon (float): The exploration rate.
         gamma (float): The discount factor.
         num_episodes (int): The number of episodes to run.
@@ -39,7 +39,7 @@ def mc_control(
     assert method in ['first_visit', 'every_visit'], "method must be 'first_visit' or 'every_visit'"
 
     # --- Parameter logging ---
-    logger.info(f'ARG logdir {logdir}')
+    logger.info(f'ARG data_dir {data_dir}')
     logger.info(f'ARG epsilon {epsilon}')
     logger.info(f'ARG gamma {gamma}')
     logger.info(f'ARG num_episodes {num_episodes}')
@@ -48,7 +48,7 @@ def mc_control(
 
     # --- Initialization ---
     # Summary writer
-    summary_writer = tf.summary.create_file_writer(logdir)
+    summary_writer = tf.summary.create_file_writer(data_dir)
 
     # Environment
     env = env_fn()
@@ -124,7 +124,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--env', type=str, required=True)
-    parser.add_argument('--logdir', type=str, default='/tmp/exp/mc_control')
+    parser.add_argument('--data_dir', type=str, default='/tmp/exp/mc_control')
     parser.add_argument('--epsilon', type=float, default=0.1)
     parser.add_argument('--gamma', type=float, default=0.99)
     parser.add_argument('--method', type=str, default='first_visit')
@@ -134,7 +134,7 @@ if __name__ == '__main__':
 
     mc_control(
         env_fn=lambda: gym.make(args.env),
-        logdir=args.logdir,
+        data_dir=args.data_dir,
         epsilon=args.epsilon,
         gamma=args.gamma,
         method=args.method,

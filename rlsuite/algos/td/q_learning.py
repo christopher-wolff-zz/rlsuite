@@ -12,20 +12,19 @@ logger.setLevel(logging.INFO)
 
 
 def q_learning(
-    logdir,
     env_fn,
+    data_dir,
     alpha,
     epsilon,
     gamma,
     num_episodes,
-    exp_name='q_learning',
     seed=0
 ):
     """Off-policy TD control.
 
     Args:
-        logdir (str): The base directory for storing experiment data.
         env_fn (func): A function that creates an instance of an environment.
+        data_dir (str): The base directory for storing experiment data.
         alpha (float): The step size.
         epsilon (float): The exploration rate.
         gamma (float): The discount factor.
@@ -40,17 +39,16 @@ def q_learning(
     assert num_episodes > 0, 'num_episodes must be positive'
 
     # --- Parameter logging ---
+    logger.info(f'ARG data_dir {data_dir}')
     logger.info(f'ARG alpha {alpha}')
     logger.info(f'ARG epsilon {epsilon}')
     logger.info(f'ARG gamma {gamma}')
     logger.info(f'ARG num_episodes {num_episodes}')
-    logger.info(f'ARG base_dir {base_dir}')
-    logger.info(f'ARG exp_name {exp_name}')
     logger.info(f'ARG seed {seed}')
 
     # --- Initialization ---
     # Summary writer
-    summary_writer = tf.summary.FileWriter(logdir)
+    summary_writer = tf.summary.FileWriter(data_dir)
 
     # Environment
     env = env_fn()
@@ -123,22 +121,20 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--env', type=str, required=True)
+    parser.add_argument('--data_dir', type=str, default='/tmp/exp/q_learning')
     parser.add_argument('--alpha', type=float, default=0.1)
     parser.add_argument('--epsilon', type=float, default=0.1)
     parser.add_argument('--gamma', type=float, default=0.99)
     parser.add_argument('--num_episodes', type=int, default=100)
-    parser.add_argument('--base_dir', type=str, default='/tmp/experiments')
-    parser.add_argument('--exp_name', type=str, default='q_learning')
     parser.add_argument('--seed', '-s', type=int, default=0)
     args = parser.parse_args()
 
     q_learning(
         env_fn=lambda: gym.make(args.env),
+        data_dir=args.data_dir,
         alpha=args.alpha,
         epsilon=args.epsilon,
         gamma=args.gamma,
         num_episodes=args.num_episodes,
-        base_dir=args.base_dir,
-        exp_name=args.exp_name,
         seed=args.seed
     )
