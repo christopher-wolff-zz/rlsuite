@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-def q_learning(
+def qlearning(
     env_fn,
     data_dir,
     alpha,
@@ -129,7 +129,7 @@ if __name__ == '__main__':
     parser.add_argument('--seed', '-s', type=int, default=0)
     args = parser.parse_args()
 
-    q_learning(
+    qlearning(
         env_fn=lambda: gym.make(args.env),
         data_dir=args.data_dir,
         alpha=args.alpha,
