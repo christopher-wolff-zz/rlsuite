@@ -1,9 +1,14 @@
 import itertools
+import logging
 import os
 import sys
 
 import numpy as np
 import tensorflow as tf
+
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 def sarsa(
@@ -36,13 +41,13 @@ def sarsa(
     assert num_episodes > 0, 'num_episodes must be positive'
 
     # --- Parameter logging ---
-    tf.logging.info(f'ARG alpha {alpha}')
-    tf.logging.info(f'ARG epsilon {epsilon}')
-    tf.logging.info(f'ARG gamma {gamma}')
-    tf.logging.info(f'ARG num_episodes {num_episodes}')
-    tf.logging.info(f'ARG base_dir {base_dir}')
-    tf.logging.info(f'ARG exp_name {exp_name}')
-    tf.logging.info(f'ARG seed {seed}')
+    logger.info(f'ARG alpha {alpha}')
+    logger.info(f'ARG epsilon {epsilon}')
+    logger.info(f'ARG gamma {gamma}')
+    logger.info(f'ARG num_episodes {num_episodes}')
+    logger.info(f'ARG base_dir {base_dir}')
+    logger.info(f'ARG exp_name {exp_name}')
+    logger.info(f'ARG seed {seed}')
 
     # --- Initialization ---
     # Summary writer
@@ -104,11 +109,9 @@ def sarsa(
             episode_return += reward
 
         # Write episode summary
-        summary = tf.Summary(value=[
-            tf.Summary.Value(tag='episode_length', simple_value=episode_length),
-            tf.Summary.Value(tag='episode_return', simple_value=episode_return)
-        ])
-        summary_writer.add_summary(summary, global_step=i)
+        with summary_writer.as_default():
+            tf.summary.scalar('episode_length', episode_length, step=i)
+            tf.summary.scalar('episode_return', episode_return, step=i)
 
     # --- Deinitialization ---
     env.close()
@@ -129,8 +132,6 @@ if __name__ == '__main__':
     parser.add_argument('--exp_name', type=str, default='expected_sarsa')
     parser.add_argument('--seed', '-s', type=int, default=0)
     args = parser.parse_args()
-
-    tf.logging.set_verbosity(tf.logging.INFO)
 
     sarsa(
         env_fn=lambda: gym.make(args.env),
