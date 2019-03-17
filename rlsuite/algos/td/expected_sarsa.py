@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-def sarsa(
+def expected_sarsa(
     env_fn,
     data_dir,
     alpha,
