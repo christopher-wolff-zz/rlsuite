@@ -133,14 +133,6 @@ if __name__ == '__main__':
     parser.add_argument('--seed', '-s', type=int, default=0)
     args = parser.parse_args()
 
-    # TODO: handle custom environments
-    # gym_envs = [env.id for env in gym.envs.registry.all()]
-    # if args.env not in gym_envs:
-    #     import lab.envs.gridworld
-    #     env_fn = lambda: gym.make('GridWorld-v0')
-    # else:
-    #     env_fn = lambda: gym.make(args.env)
-
     tf.logging.set_verbosity(tf.logging.INFO)
 
     mc_control(
