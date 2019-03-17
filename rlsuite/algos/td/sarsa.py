@@ -12,25 +12,23 @@ logger.setLevel(logging.INFO)
 
 
 def sarsa(
+    logdir,
     env_fn,
     alpha,
     epsilon,
     gamma,
     num_episodes,
-    base_dir='/tmp/experiments',
-    exp_name='sarsa',
     seed=0
 ):
     """On-policy TD control.
 
     Args:
+        logdir (str): The base directory for storing experiment data.
         env_fn (func): A function that creates an instance of an environment.
         alpha (float): The step size.
         epsilon (float): The exploration rate.
         gamma (float): The discount factor.
         num_episodes (int): The number of episodes to run.
-        base_dir (str): The base directory for storing experiment data.
-        exp_name (str): The name of the experiment.
         seed (int): A seed that fixes all randomness if possible.
 
     """
@@ -41,17 +39,16 @@ def sarsa(
     assert num_episodes > 0, 'num_episodes must be positive'
 
     # --- Parameter logging ---
+    logger.info(f'ARG logdir {logdir}')
     logger.info(f'ARG alpha {alpha}')
     logger.info(f'ARG epsilon {epsilon}')
     logger.info(f'ARG gamma {gamma}')
     logger.info(f'ARG num_episodes {num_episodes}')
-    logger.info(f'ARG base_dir {base_dir}')
-    logger.info(f'ARG exp_name {exp_name}')
     logger.info(f'ARG seed {seed}')
 
     # --- Initialization ---
     # Summary writer
-    summary_writer = tf.summary.FileWriter(os.path.join(base_dir, exp_name))
+    summary_writer = tf.summary.FileWriter(logdir)
 
     # Environment
     env = env_fn()
