@@ -1,6 +1,5 @@
 import itertools
 import logging
-import os
 import sys
 
 import numpy as np
@@ -13,24 +12,23 @@ logger.setLevel(logging.INFO)
 
 def expected_sarsa(
     env_fn,
-    data_dir,
     alpha,
     epsilon,
     gamma,
     num_episodes,
-    exp_name='expected_sarsa',
-    seed=0
+    seed=0,
+    data_dir=None
 ):
     """On-policy TD control.
 
     Args:
         env_fn (func): A function that creates an instance of an environment.
-        data_dir (str): The base directory for storing experiment data.
         alpha (float): The step size.
         epsilon (float): The exploration rate.
         gamma (float): The discount factor.
         num_episodes (int): The number of episodes to run.
         seed (int): A seed that fixes all randomness if possible.
+        data_dir (str): Optional. A directory for storing experiment data.
 
     """
     # --- Parameter validation ---
@@ -40,12 +38,12 @@ def expected_sarsa(
     assert num_episodes > 0, 'num_episodes must be positive'
 
     # --- Parameter logging ---
-    logger.info(f'ARG data_dir {data_dir}')
     logger.info(f'ARG alpha {alpha}')
     logger.info(f'ARG epsilon {epsilon}')
     logger.info(f'ARG gamma {gamma}')
     logger.info(f'ARG num_episodes {num_episodes}')
     logger.info(f'ARG seed {seed}')
+    logger.info(f'ARG data_dir {data_dir}')
 
     # --- Initialization ---
     # Summary writer
@@ -122,20 +120,20 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--env', type=str, required=True)
-    parser.add_argument('--data_dir', type=str, default='/tmp/exp/expected_sarsa')
     parser.add_argument('--alpha', type=float, default=0.1)
     parser.add_argument('--epsilon', type=float, default=0.1)
     parser.add_argument('--gamma', type=float, default=0.99)
     parser.add_argument('--num_episodes', type=int, default=100)
     parser.add_argument('--seed', '-s', type=int, default=0)
+    parser.add_argument('--data_dir', type=str, default='/tmp/exp/expected_sarsa')
     args = parser.parse_args()
 
     sarsa(
         env_fn=lambda: gym.make(args.env),
-        data_dir=args.data_dir,
         alpha=args.alpha,
         epsilon=args.epsilon,
         gamma=args.gamma,
         num_episodes=args.num_episodes,
-        seed=args.seed
+        seed=args.seed,
+        data_dir=args.data_dir,
     )

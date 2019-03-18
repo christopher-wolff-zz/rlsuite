@@ -1,6 +1,5 @@
 import itertools
 import logging
-import os
 import sys
 
 import numpy as np
@@ -11,25 +10,25 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-def sarsa(
+def qlearning(
     env_fn,
-    data_dir,
     alpha,
     epsilon,
     gamma,
     num_episodes,
-    seed=0
+    seed=0,
+    data_dir=None
 ):
-    """On-policy TD control.
+    """Off-policy TD control.
 
     Args:
         env_fn (func): A function that creates an instance of an environment.
-        data_dir (str): The base directory for storing experiment data.
         alpha (float): The step size.
         epsilon (float): The exploration rate.
         gamma (float): The discount factor.
         num_episodes (int): The number of episodes to run.
         seed (int): A seed that fixes all randomness if possible.
+        data_dir (str): Optional. A directory for storing experiment data.
 
     """
     # --- Parameter validation ---
@@ -39,12 +38,12 @@ def sarsa(
     assert num_episodes > 0, 'num_episodes must be positive'
 
     # --- Parameter logging ---
-    logger.info(f'ARG data_dir {data_dir}')
     logger.info(f'ARG alpha {alpha}')
     logger.info(f'ARG epsilon {epsilon}')
     logger.info(f'ARG gamma {gamma}')
     logger.info(f'ARG num_episodes {num_episodes}')
     logger.info(f'ARG seed {seed}')
+    logger.info(f'ARG data_dir {data_dir}')
 
     # --- Initialization ---
     # Summary writer
@@ -77,17 +76,16 @@ def sarsa(
 
         # Simulate one episode
         state = env.reset()
-        action = np.random.choice(num_actions, p=pi[state])
         done = False
         while not done:
-            # Take action and observe next state
+            # Choose action from current policy
+            action = np.random.choice(num_actions, p=pi[state])
+
+            # Take action in the environment
             next_state, reward, done, _ = env.step(action)
 
-            # Determine next action and next state
-            next_action = np.random.choice(num_actions, p=pi[state])
-
             # Update Q for the current state
-            target = reward + gamma * Q[next_state, next_action]
+            target = reward + gamma * np.max(Q[next_state])
             Q[state, action] += alpha * (target - Q[state, action])
 
             # Update policy for the current state
@@ -99,9 +97,8 @@ def sarsa(
                 else:
                     pi[state, a] = epsilon / num_actions
 
-            # Update state and action
+            # Update state
             state = next_state
-            action = next_action
 
             # Update statistics
             episode_length += 1
@@ -118,25 +115,25 @@ def sarsa(
 
 
 if __name__ == '__main__':
-    import argparse
+    import argparselogger
     import gym
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--env', type=str, required=True)
-    parser.add_argument('--data_dir', type=str, default='/tmp/exp/sarsa')
     parser.add_argument('--alpha', type=float, default=0.1)
     parser.add_argument('--epsilon', type=float, default=0.1)
     parser.add_argument('--gamma', type=float, default=0.99)
     parser.add_argument('--num_episodes', type=int, default=100)
     parser.add_argument('--seed', '-s', type=int, default=0)
+    parser.add_argument('--data_dir', type=str, default='/tmp/exp/q_learning')
     args = parser.parse_args()
 
-    sarsa(
+    qlearning(
         env_fn=lambda: gym.make(args.env),
-        data_dir=args.data_dir,
         alpha=args.alpha,
         epsilon=args.epsilon,
         gamma=args.gamma,
         num_episodes=args.num_episodes,
-        seed=args.seed
+        seed=args.seed,
+        data_dir=args.data_dir,
     )

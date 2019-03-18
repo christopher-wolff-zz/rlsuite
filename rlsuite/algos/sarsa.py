@@ -1,6 +1,5 @@
 import itertools
 import logging
-import os
 import sys
 
 import numpy as np
@@ -11,44 +10,44 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-def mc_control(
+def sarsa(
     env_fn,
-    data_dir,
+    alpha,
     epsilon,
     gamma,
     num_episodes,
-    method='first_visit',
-    seed=0
+    seed=0,
+    data_dir=None
 ):
-    """On-policy Monte Carlo control.
+    """On-policy TD control.
 
     Args:
         env_fn (func): A function that creates an instance of an environment.
-        data_dir (str): The base directory for storing experiment data.
+        alpha (float): The step size.
         epsilon (float): The exploration rate.
         gamma (float): The discount factor.
         num_episodes (int): The number of episodes to run.
-        method (str): Either 'first_visit' or 'every_visit'.
         seed (int): A seed that fixes all randomness if possible.
+        data_dir (str): Optional. A directory for storing experiment data.
 
     """
     # --- Parameter validation ---
+    assert alpha > 0 and epsilon <= 1, 'epsilon must be in (0, 1]'
     assert epsilon >= 0 and epsilon <= 1, 'epsilon must be in [0, 1]'
     assert gamma >= 0 and gamma <= 1, 'gamma must be in [0, 1]'
     assert num_episodes > 0, 'num_episodes must be positive'
-    assert method in ['first_visit', 'every_visit'], "method must be 'first_visit' or 'every_visit'"
 
     # --- Parameter logging ---
-    logger.info(f'ARG data_dir {data_dir}')
+    logger.info(f'ARG alpha {alpha}')
     logger.info(f'ARG epsilon {epsilon}')
     logger.info(f'ARG gamma {gamma}')
     logger.info(f'ARG num_episodes {num_episodes}')
-    logger.info(f'ARG method {method}')
     logger.info(f'ARG seed {seed}')
+    logger.info(f'ARG data_dir {data_dir}')
 
     # --- Initialization ---
     # Summary writer
-    summary_writer = tf.summary.create_file_writer(data_dir)
+    summary_writer = tf.summary.FileWriter(data_dir)
 
     # Environment
     env = env_fn()
@@ -65,10 +64,6 @@ def mc_control(
     # Q-table
     Q = np.zeros((num_states, num_actions))
 
-    # Return buffer
-    returns = np.empty((num_states, num_actions), dtype=object)
-    returns[...] = [[list() for _ in range(num_actions)] for _ in range(num_states)]
-
     # --- Main loop ---
     for i in range(num_episodes):
         # Console logging
@@ -76,41 +71,44 @@ def mc_control(
         sys.stdout.flush()
 
         # Initialize episode statistics
+        episode_length = 0
         episode_return = 0
 
-        # Roll out an episode
-        episode = []
+        # Simulate one episode
         state = env.reset()
+        action = np.random.choice(num_actions, p=pi[state])
         done = False
         while not done:
-            action = np.random.choice(num_actions, p=pi[state])
+            # Take action and observe next state
             next_state, reward, done, _ = env.step(action)
-            episode.append((state, action, reward))
-            state = next_state
-            episode_return += reward
 
-        # Update Q-table and policy
-        G = 0
-        visited = np.full((num_states, num_actions), False)
-        for (state, action, reward) in reversed(episode):
-            G = gamma * G + reward
-            returns[state, action].append(G)
-            if not visited[state, action] or method == 'every_visit':
-                # Update Q table
-                Q[state, action] = np.mean(returns[state, action])
-                # Improve policy
-                best_actions = np.where(Q[state] == Q[state].max())[0]
-                best_action = np.random.choice(best_actions)
-                for a in np.arange(num_actions):
-                    if a == best_action:
-                        pi[state, a] = 1 - epsilon + epsilon / num_actions
-                    else:
-                        pi[state, a] = epsilon / num_actions
-            visited[state, action] = True
+            # Determine next action and next state
+            next_action = np.random.choice(num_actions, p=pi[state])
+
+            # Update Q for the current state
+            target = reward + gamma * Q[next_state, next_action]
+            Q[state, action] += alpha * (target - Q[state, action])
+
+            # Update policy for the current state
+            best_actions = np.where(Q[state] == Q[state].max())[0]
+            best_action = np.random.choice(best_actions)
+            for a in np.arange(num_actions):
+                if a == best_action:
+                    pi[state, a] = 1 - epsilon + epsilon / num_actions
+                else:
+                    pi[state, a] = epsilon / num_actions
+
+            # Update state and action
+            state = next_state
+            action = next_action
+
+            # Update statistics
+            episode_length += 1
+            episode_return += reward
 
         # Write episode summary
         with summary_writer.as_default():
-            tf.summary.scalar('episode_length', len(episode), step=i)
+            tf.summary.scalar('episode_length', episode_length, step=i)
             tf.summary.scalar('episode_return', episode_return, step=i)
 
     # --- Deinitialization ---
@@ -124,20 +122,20 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--env', type=str, required=True)
-    parser.add_argument('--data_dir', type=str, default='/tmp/exp/mc_control')
+    parser.add_argument('--alpha', type=float, default=0.1)
     parser.add_argument('--epsilon', type=float, default=0.1)
     parser.add_argument('--gamma', type=float, default=0.99)
-    parser.add_argument('--method', type=str, default='first_visit')
     parser.add_argument('--num_episodes', type=int, default=100)
     parser.add_argument('--seed', '-s', type=int, default=0)
+    parser.add_argument('--data_dir', type=str, default='/tmp/exp/sarsa')
     args = parser.parse_args()
 
-    mc_control(
+    sarsa(
         env_fn=lambda: gym.make(args.env),
-        data_dir=args.data_dir,
+        alpha=args.alpha,
         epsilon=args.epsilon,
         gamma=args.gamma,
-        method=args.method,
         num_episodes=args.num_episodes,
-        seed=args.seed
+        seed=args.seed,
+        data_dir=args.data_dir,
     )

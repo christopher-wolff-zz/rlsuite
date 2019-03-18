@@ -6,10 +6,10 @@ A collection of basic reinforcement learning algorithms and environments. All al
 
 ### Exact solution methods
 
-- [Q-learning](rlsuite/algos/td/qlearning.py)
-- [Sarsa](rlsuite/algos/td/sarsa.py)
-- [Expected Sarsa](rlsuite/algos/td/expected_sarsa.py)
-- [On-policy Monte Carlo control](rlsuite/algos/mc/mc_control.py)
+- [Q-learning](rlsuite/algos/qlearning.py)
+- [Sarsa](rlsuite/algos/sarsa.py)
+- [Expected Sarsa](rlsuite/algos/expected_sarsa.py)
+- [On-policy Monte Carlo control](rlsuite/algos/mc_control.py)
 
 ### Approximate solution methods
 
