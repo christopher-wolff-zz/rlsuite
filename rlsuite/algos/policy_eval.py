@@ -36,6 +36,7 @@ def policy_eval(
 
     """
     # --- Parameter validation ---
+    assert gamma >= 0 and gamma <= 1, 'gamma must be in [0, 1]'
     assert theta > 0, 'theta must be greater than 0'
 
     # --- Initialization ---
