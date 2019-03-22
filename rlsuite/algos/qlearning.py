@@ -1,13 +1,12 @@
 import itertools
 import logging
 import sys
+import time
 
 import numpy as np
 import tensorflow as tf
 
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+from rlsuite.utils import Logger
 
 
 def qlearning(
@@ -17,7 +16,8 @@ def qlearning(
     gamma,
     num_episodes,
     seed=0,
-    data_dir=None
+    data_dir=None,
+    log_freq=1,
 ):
     """Off-policy TD control.
 
@@ -28,7 +28,8 @@ def qlearning(
         gamma (float): The discount factor.
         num_episodes (int): The number of episodes to run.
         seed (int): A seed that fixes all randomness if possible.
-        data_dir (str): Optional. A directory for storing experiment data.
+        data_dir (str): The directory for storing experiment data.
+        log_freq (int): The interval for logging to the console.
 
     """
     # --- Parameter validation ---
@@ -37,39 +38,31 @@ def qlearning(
     assert gamma >= 0 and gamma <= 1, 'gamma must be in [0, 1]'
     assert num_episodes > 0, 'num_episodes must be positive'
 
-    # --- Parameter logging ---
-    logger.info(f'ARG alpha {alpha}')
-    logger.info(f'ARG epsilon {epsilon}')
-    logger.info(f'ARG gamma {gamma}')
-    logger.info(f'ARG num_episodes {num_episodes}')
-    logger.info(f'ARG seed {seed}')
-    logger.info(f'ARG data_dir {data_dir}')
-
     # --- Initialization ---
-    # Summary writer
-    summary_writer = tf.summary.FileWriter(data_dir)
+    logger = Logger(output_dir=data_dir, log_freq=log_freq)
+    logger.log_params(
+        alpha=alpha,
+        epsilon=epsilon,
+        gamma=gamma,
+        num_episodes=num_episodes,
+        seed=seed,
+        data_dir=data_dir,
+    )
 
-    # Environment
     env = env_fn()
     num_states = env.observation_space.n
     num_actions = env.action_space.n
 
-    # Seeds
     env.seed(seed)
     np.random.seed(seed)
 
-    # Policy - pi[s] is a vector of probabilities for each action in state s.
     pi = np.full((num_states, num_actions), 1 / num_actions)
-
-    # Q-table
     Q = np.zeros((num_states, num_actions))
+
+    start_time = time.time()
 
     # --- Main loop ---
     for i in range(num_episodes):
-        # Console logging
-        sys.stdout.write(f'Episode {i}/{num_episodes}\r')
-        sys.stdout.flush()
-
         # Initialize episode statistics
         episode_length = 0
         episode_return = 0
@@ -104,18 +97,20 @@ def qlearning(
             episode_length += 1
             episode_return += reward
 
-        # Write episode summary
-        with summary_writer.as_default():
-            tf.summary.scalar('episode_length', episode_length, step=i)
-            tf.summary.scalar('episode_return', episode_return, step=i)
+        # Log statistics
+        logger.log_stats(
+            step=i,
+            episode_length=episode_length,
+            episode_return=episode_return,
+            time=time.time()-start_time
+        )
 
     # --- Deinitialization ---
     env.close()
-    summary_writer.close()
 
 
 if __name__ == '__main__':
-    import argparselogger
+    import argparse
     import gym
 
     parser = argparse.ArgumentParser()
@@ -123,9 +118,10 @@ if __name__ == '__main__':
     parser.add_argument('--alpha', type=float, default=0.1)
     parser.add_argument('--epsilon', type=float, default=0.1)
     parser.add_argument('--gamma', type=float, default=0.99)
-    parser.add_argument('--num_episodes', type=int, default=100)
+    parser.add_argument('--num_episodes', type=int, default=1000)
     parser.add_argument('--seed', '-s', type=int, default=0)
-    parser.add_argument('--data_dir', type=str, default='/tmp/exp/q_learning')
+    parser.add_argument('--data_dir', type=str, default='/tmp/experiments/qlearning')
+    parser.add_argument('--log_freq', type=int, default=1)
     args = parser.parse_args()
 
     qlearning(
@@ -136,4 +132,5 @@ if __name__ == '__main__':
         num_episodes=args.num_episodes,
         seed=args.seed,
         data_dir=args.data_dir,
+        log_freq=args.log_freq,
     )
