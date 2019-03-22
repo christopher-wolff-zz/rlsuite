@@ -10,6 +10,7 @@ A collection of basic reinforcement learning algorithms and environments. All al
 - [Sarsa](rlsuite/algos/sarsa.py)
 - [Expected Sarsa](rlsuite/algos/expected_sarsa.py)
 - [On-policy Monte Carlo control](rlsuite/algos/mc_control.py)
+- [Policy evaluation](rlsuite/algos/policy_eval.py)
 
 ### Approximate solution methods
 
