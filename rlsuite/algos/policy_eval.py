@@ -13,7 +13,7 @@ def policy_eval(
     max_iter=0,
     seed=0,
     data_dir=None,
-    log_freq=1
+    log_freq=1,
 ):
     """Iterative policy evaluation for tabular environments.
 
@@ -50,7 +50,6 @@ def policy_eval(
 
     # State and action space
     num_states = env.observation_space.n
-    num_actions = env.action_space.n
 
     # Value function
     V = np.zeros((num_states))
