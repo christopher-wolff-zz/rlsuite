@@ -68,9 +68,7 @@ class Logger:
         """
         # Set up output file
         self.output_dir = output_dir or '/tmp/experiments/%i' % int(time.time())
-        if os.path.exists(self.output_dir):
-            print(f'Warning: Directory {self.output_dir} already exists! Storing info there anyway.')
-        else:
+        if not os.path.exists(self.output_dir):
             os.makedirs(self.output_dir)
         output_filepath = os.path.join(output_dir, output_fname)
         self.output_file = open(output_filepath, 'w')
