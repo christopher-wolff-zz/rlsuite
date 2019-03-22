@@ -62,7 +62,8 @@ class Logger:
                 directory of the form `/tmp/experiments/some-random-number`.
             output_fname (str): The output file name.
             exp_name (str): The name of the experiment.
-            log_freq (int): The log frequency.
+            log_freq (int): The log frequency. If non-positive, no statistics
+                will be displayed to the console.
 
         """
         # Set up output file
@@ -82,7 +83,8 @@ class Logger:
         self.log_headers = None
         self.counter = 0  # keeps track of how often log_stats is called
 
-    def log_params(self, **params):
+    @staticmethod
+    def log_params(**params):
         """Log any number of experiment parameters and display them in stdout.
 
         Args:
@@ -121,7 +123,7 @@ class Logger:
         self.output_file.flush()
 
         # Display in stdout
-        if self.counter % self.log_freq == 0:
+        if self.log_freq > 0 and self.counter % self.log_freq == 0:
             _print_table(stats)
 
         self.first_row = False

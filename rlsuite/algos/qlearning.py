@@ -1,10 +1,7 @@
 import itertools
-import logging
-import sys
 import time
 
 import numpy as np
-import tensorflow as tf
 
 from rlsuite.utils import Logger
 
@@ -31,6 +28,9 @@ def qlearning(
         data_dir (str): The directory for storing experiment data.
         log_freq (int): The interval for logging to the console.
 
+    Returns:
+        A tuple containing the final Q table and policy.
+
     """
     # --- Parameter validation ---
     assert alpha > 0 and epsilon <= 1, 'epsilon must be in (0, 1]'
@@ -56,8 +56,8 @@ def qlearning(
     env.seed(seed)
     np.random.seed(seed)
 
-    pi = np.full((num_states, num_actions), 1 / num_actions)
     Q = np.zeros((num_states, num_actions))
+    pi = np.full((num_states, num_actions), 1 / num_actions)
 
     start_time = time.time()
 
@@ -102,11 +102,12 @@ def qlearning(
             step=i,
             episode_length=episode_length,
             episode_return=episode_return,
-            time=time.time()-start_time
+            time=time.time()-start_time,
         )
 
     # --- Deinitialization ---
     env.close()
+    return Q, pi
 
 
 if __name__ == '__main__':

@@ -13,5 +13,5 @@ def test_policy_eval():
         gamma=0.99,
         theta=0.001,
         data_dir='/tmp/tests/policy_eval',
-        log_freq=1,
+        log_freq=0,
     )

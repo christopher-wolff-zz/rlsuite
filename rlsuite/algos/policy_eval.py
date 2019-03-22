@@ -1,4 +1,5 @@
 import itertools
+import time
 
 import numpy as np
 
@@ -40,19 +41,16 @@ def policy_eval(
     assert theta > 0, 'theta must be greater than 0'
 
     # --- Initialization ---
-    # Logger
     logger = Logger(output_dir=data_dir)
     logger.log_params(gamma=gamma, theta=theta, max_iter=max_iter)
 
-    # Environment
     env = env_fn()
     env.seed(seed)
 
-    # State and action space
     num_states = env.observation_space.n
-
-    # Value function
     V = np.zeros((num_states))
+
+    start_time = time.time()
 
     # --- Main loop ---
     for i in itertools.count():
@@ -68,7 +66,7 @@ def policy_eval(
             V[state] = new_v
             delta = max(delta, abs(new_v - old_v))
 
-        logger.log_stats(step=i, delta=delta)
+        logger.log_stats(step=i, delta=delta, time=time.time()-start_time)
 
         if delta < theta or (max_iter > 0 and i > max_iter):
             break
