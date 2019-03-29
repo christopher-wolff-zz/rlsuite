@@ -14,7 +14,7 @@ def expected_sarsa(
     num_episodes,
     seed=0,
     data_dir=None,
-    log_freq=1,
+    log_freq=0,
 ):
     """On-policy TD control.
 
@@ -99,7 +99,7 @@ def expected_sarsa(
             episode_return += reward
 
         logger.log_stats(
-            episode=i,
+            iteration=i,
             episode_length=episode_length,
             episode_return=episode_return,
             time=time.time()-start_time,

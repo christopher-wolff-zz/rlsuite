@@ -14,7 +14,7 @@ def policy_eval(
     max_iter=0,
     seed=0,
     data_dir=None,
-    log_freq=1,
+    log_freq=0,
 ):
     """Iterative policy evaluation for tabular environments.
 

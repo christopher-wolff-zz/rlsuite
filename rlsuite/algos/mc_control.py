@@ -8,13 +8,13 @@ from rlsuite import utils
 
 def mc_control(
     env_fn,
-    epsilon,
-    gamma,
-    num_episodes,
+    epsilon=0.1,
+    gamma=0.99,
+    num_episodes=1000,
     method='first_visit',
     seed=0,
     data_dir=None,
-    log_freq=1,
+    log_freq=0,
 ):
     """On-policy Monte Carlo control.
 
@@ -101,7 +101,7 @@ def mc_control(
             visited[state, action] = True
 
         logger.log_stats(
-            episode=i,
+            iteration=i,
             episode_length=len(episode),
             episode_return=episode_return,
             time=time.time()-start_time,
@@ -124,7 +124,7 @@ if __name__ == '__main__':
     parser.add_argument('--num_episodes', type=int, default=100)
     parser.add_argument('--seed', '-s', type=int, default=0)
     parser.add_argument('--data_dir', type=str, default='/tmp/experiments/mc_control')
-    parser.add_argument('--log_freq', type=int, default=1)
+    parser.add_argument('--log_freq', type=int, default=0)
     args = parser.parse_args()
 
     mc_control(

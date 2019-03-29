@@ -8,13 +8,13 @@ from rlsuite.utils import Logger
 
 def qlearning(
     env_fn,
-    alpha,
-    epsilon,
-    gamma,
-    num_episodes,
+    alpha=0.1,
+    epsilon=0.1,
+    gamma=0.99,
+    num_episodes=1000,
     seed=0,
     data_dir=None,
-    log_freq=1,
+    log_freq=0,
 ):
     """Off-policy TD control.
 
@@ -99,7 +99,7 @@ def qlearning(
 
         # Log statistics
         logger.log_stats(
-            step=i,
+            iteration=i,
             episode_length=episode_length,
             episode_return=episode_return,
             time=time.time()-start_time,
@@ -122,7 +122,7 @@ if __name__ == '__main__':
     parser.add_argument('--num_episodes', type=int, default=1000)
     parser.add_argument('--seed', '-s', type=int, default=0)
     parser.add_argument('--data_dir', type=str, default='/tmp/experiments/qlearning')
-    parser.add_argument('--log_freq', type=int, default=1)
+    parser.add_argument('--log_freq', type=int, default=0)
     args = parser.parse_args()
 
     qlearning(
