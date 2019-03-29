@@ -2,6 +2,12 @@
 
 A collection of basic reinforcement learning algorithms and environments. All algorithms are self-contained and implemented using TensorFlow.
 
+## Examples
+
+The following is a list of Jupyter notebooks that run through usage examples of RL Suite.
+
+- [Visualization](examples/visualization.ipynb)
+
 ## Algorithms
 
 ### Exact solution methods
