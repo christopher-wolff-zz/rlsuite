@@ -92,11 +92,9 @@ def sarsa(
                 else:
                     pi[state, a] = epsilon / num_actions
 
-            # Update state and action
+            # Update state, action, and statistics
             state = next_state
             action = next_action
-
-            # Update statistics
             episode_length += 1
             episode_return += reward
 

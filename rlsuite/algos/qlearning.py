@@ -90,10 +90,8 @@ def qlearning(
                 else:
                     pi[state, a] = epsilon / num_actions
 
-            # Update state
+            # Update state and statistics
             state = next_state
-
-            # Update statistics
             episode_length += 1
             episode_return += reward
 
