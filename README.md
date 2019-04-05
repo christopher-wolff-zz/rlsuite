@@ -20,4 +20,5 @@ The following is a list of Jupyter notebooks that run through usage examples of 
 
 ### Approximate solution methods
 
-Coming soon.
+- [Gradient Monte Carlo Prediction](rlsuite/algos/gradient_mc_prediction.py)
+- [Semi-gradient TD Prediction](rlsuite/algos/semi_gradient_td_prediction.py)
