@@ -83,17 +83,6 @@ class Logger:
         self.log_headers = None
         self.counter = 0  # keeps track of how often log_stats is called
 
-    @staticmethod
-    def log_params(**params):
-        """Log any number of experiment parameters and display them in stdout.
-
-        Args:
-            params: A collection of {param_name: param_value} pairs.
-
-        """
-        for name, value in params.items():
-            print(f'PARAM {name} {value}')
-
     def log_stats(self, **stats):
         """Log any number of experiment statistics.
 

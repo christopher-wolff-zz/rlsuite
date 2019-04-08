@@ -39,14 +39,6 @@ def lstd(
 
     # --- Initialization ---
     logger = utils.Logger(output_dir=data_dir, log_freq=log_freq)
-    logger.log_params(
-        epsilon=epsilon,
-        gamma=gamma,
-        num_iter=num_iter,
-        seed=seed,
-        data_dir=data_dir,
-        log_freq=log_freq,
-    )
 
     env = env_fn()
     num_actions = env.action_space.n

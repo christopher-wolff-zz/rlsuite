@@ -46,16 +46,6 @@ def td_lambda(
 
     # --- Initialization ---
     logger = utils.Logger(output_dir=data_dir, log_freq=log_freq)
-    logger.log_params(
-        alpha=alpha,
-        lambda_=lambda_,
-        gamma=gamma,
-        num_episodes=num_episodes,
-        seed=seed,
-        data_dir=data_dir,
-        log_freq=log_freq,
-    )
-    value_fn.summary()
 
     env = env_fn()
     num_actions = env.action_space.n

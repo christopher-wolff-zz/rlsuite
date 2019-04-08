@@ -40,14 +40,6 @@ def mc_control(
 
     # --- Initialization ---
     logger = utils.Logger(output_dir=data_dir, log_freq=log_freq)
-    logger.log_params(
-        epsilon=epsilon,
-        gamma=gamma,
-        num_iter=num_iter,
-        method=method,
-        seed=seed,
-        data_dir=data_dir,
-    )
 
     env = env_fn()
     num_states = env.observation_space.n

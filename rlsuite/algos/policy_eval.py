@@ -42,7 +42,6 @@ def policy_eval(
 
     # --- Initialization ---
     logger = Logger(output_dir=data_dir)
-    logger.log_params(gamma=gamma, theta=theta, max_iter=max_iter)
 
     env = env_fn()
     env.seed(seed)

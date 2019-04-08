@@ -40,15 +40,6 @@ def sarsa(
 
     # --- Initialization ---
     logger = utils.Logger(output_dir=data_dir, log_freq=log_freq)
-    logger.log_params(
-        alpha=alpha,
-        epsilon=epsilon,
-        gamma=gamma,
-        num_episodes=num_episodes,
-        seed=seed,
-        data_dir=data_dir,
-        log_freq=log_freq,
-    )
 
     env = env_fn()
     num_states = env.observation_space.n
