@@ -81,7 +81,7 @@ def td_lambda(
                 value = value_fn(x)
             grads = tape.gradient(value, weights)
 
-            # Update `z`
+            # Update trace
             for z_, g in zip(z, grads):
                 z_.assign(gamma * lambda_ * z_ + g)
 
