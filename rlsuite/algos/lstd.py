@@ -63,11 +63,15 @@ def lstd(
 
     # --- Main loop ---
     for i in range(num_iter):
+        # Initialize statistics
         episode_length = 0
         episode_return = 0
 
+        # Reset
         x = env.reset()
         done = False
+
+        # Simulate one episode
         while not done:
             action = np.random.choice(num_actions, p=policy(x))
             next_x, reward, done, _ = env.step(action)
@@ -77,6 +81,7 @@ def lstd(
             b += reward * x
             w = A_inv.dot(b)
 
+            # Update feature vector and statistics
             x = next_x
             episode_length += 1
             episode_return += reward
