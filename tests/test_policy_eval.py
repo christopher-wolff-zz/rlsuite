@@ -10,8 +10,5 @@ def test_policy_eval():
     policy_eval(
         env_fn=lambda: gym.make('GridWorld-v0'),
         policy=random_policy,
-        gamma=0.99,
-        theta=0.001,
         data_dir='/tmp/tests/policy_eval',
-        log_freq=0,
     )
