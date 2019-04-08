@@ -50,14 +50,14 @@ def lstd(
 
     env = env_fn()
     num_actions = env.action_space.n
-    num_states = env.observation_space.shape[0]
+    num_features = env.observation_space.shape[0]
 
     env.seed(seed)
     np.random.seed(seed)
 
-    A_inv = 1 / epsilon * np.identity(num_states)
-    b = np.zeros(num_states)
-    w = np.zeros(num_states)
+    A_inv = 1 / epsilon * np.identity(num_features)
+    b = np.zeros(num_features)
+    w = np.zeros(num_features)
 
     start_time = time.time()
 
