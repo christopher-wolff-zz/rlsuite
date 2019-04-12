@@ -13,7 +13,7 @@ pip install rlsuite
 
 This will automatically install any required dependencies.
 
-## Examples
+## Usage
 
 The following is a list of Jupyter notebooks that run through usage examples of RL Suite.
 
