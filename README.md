@@ -2,6 +2,10 @@
 
 A collection of basic reinforcement learning algorithms and environments. All algorithms are self-contained and implemented using TensorFlow 2.0+.
 
+## Overview
+
+There are three main modules in RL Suite: `rlsuite.algos`, `rlsuite.envs`, and `rlsuite.utils`. Algorithms are simply methods whose documentation can be found in the respective algorithm file. Environments can be used by importing the respective module and then calling `gym.make(env_name)`. The utilities module provides tools for logging, loading experiment data, and plotting results.
+
 ## Installing
 
 As of now, the package isn't published in PyPI yet, but you can still install it via
@@ -12,10 +16,6 @@ pip install rlsuite
 ```
 
 This will automatically install any required dependencies.
-
-## Overview
-
-There are three main modules in RL Suite: `rlsuite.algos`, `rlsuite.envs`, and `rlsuite.utils`. Algorithms are simply methods whose documentation can be found in the respective algorithm file. Environments can be used by importing the respective module and then calling `gym.make(env_name)`. The utilities module provides tools for logging, loading experiment data, and plotting results.
 
 ## Usage
 
