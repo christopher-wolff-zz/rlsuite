@@ -29,6 +29,7 @@ from rlsuite.algos import reinforce
 from rlsuite.utils import plot_experiment
 
 DATA_DIR = '/tmp/experiments/reinforce'
+
 reinforce(
     env_fn=lambda: gym.make('CartPole-v1'),
     policy=tf.keras.Sequential([
