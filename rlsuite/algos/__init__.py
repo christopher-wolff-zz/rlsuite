@@ -7,3 +7,4 @@ from .gradient_mc_prediction import gradient_mc_prediction
 from .semi_gradient_td_prediction import semi_gradient_td_prediction
 from .lstd import lstd
 from .td_lambda import td_lambda
+from .reinforce import reinforce

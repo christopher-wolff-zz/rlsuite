@@ -24,3 +24,4 @@ The following is a list of Jupyter notebooks that run through usage examples of 
 - [Semi-gradient TD Prediction](rlsuite/algos/semi_gradient_td_prediction.py)
 - [Least Squares Temporal Difference Learning](rlsuite/algos/lstd.py)
 - [TD(lambda)](rlsuite/algos/td_lambda.py)
+- [REINFORCE](rlsuite/algos/reinforce.py)
