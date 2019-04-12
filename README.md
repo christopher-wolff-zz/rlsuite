@@ -4,14 +4,14 @@ A collection of basic reinforcement learning algorithms and environments. All al
 
 ## Installing
 
-As of now, the package isn't published in PyPI yet, but you can still install it by running
+As of now, the package isn't published in PyPI yet, but you can still install it via
 
 ```
 git clone https://github.com/christopher-wolff/rlsuite.git
 pip install rlsuite
 ```
 
-from a shell. This will automatically install any required dependencies.
+This will automatically install any required dependencies.
 
 ## Examples
 
