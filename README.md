@@ -19,7 +19,7 @@ There are three main modules in RL Suite: `rlsuite.algos`, `rlsuite.envs`, and `
 
 ## Usage
 
-The following snippet demonstrates an example workflow, in which we run the REINFORCE algorithm on the cart-pole environment described by Barto, Sutton, and Anderson (2018).
+The following snippet demonstrates an example workflow, in which we run the REINFORCE algorithm (Williams, 1992) on the cart-pole environment described by Barto, Sutton, and Anderson (2018).
 
 ```
 import gym
