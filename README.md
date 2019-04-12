@@ -1,6 +1,6 @@
 # Reinforcement Learning Suite
 
-A collection of basic reinforcement learning algorithms and environments. All algorithms are self-contained and implemented using TensorFlow 2.0+.
+A collection of basic reinforcement learning algorithms and environments. All algorithms are self-contained and implemented using TensorFlow 2.0+. The algorithms are based on pseudo-code from Sutton & Barto's book "Reinforcement learning: An introduction" (2018).
 
 ## Overview
 
