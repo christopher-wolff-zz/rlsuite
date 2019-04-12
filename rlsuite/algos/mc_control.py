@@ -92,7 +92,7 @@ def mc_control(
                         pi[state, a] = epsilon / num_actions
             visited[state, action] = True
 
-        logger.log_stats(
+        logger.store(
             iteration=i,
             episode_length=len(episode),
             episode_return=episode_return,

@@ -78,7 +78,7 @@ def lstd(
             episode_length += 1
             episode_return += reward
 
-        logger.log_stats(
+        logger.store(
             iteration=i,
             episode_length=episode_length,
             episode_return=episode_return,

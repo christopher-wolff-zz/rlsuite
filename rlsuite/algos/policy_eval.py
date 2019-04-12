@@ -65,7 +65,7 @@ def policy_eval(
             V[state] = new_v
             delta = max(delta, abs(new_v - old_v))
 
-        logger.log_stats(step=i, delta=delta, time=time.time()-start_time)
+        logger.store(step=i, delta=delta, time=time.time()-start_time)
 
         if delta < theta or (max_iter > 0 and i > max_iter):
             break

@@ -94,7 +94,7 @@ def reinforce(
                 dw = tf.reshape(alpha * gamma ** t * G * g, w.shape)
                 w.assign_add(dw)
 
-        logger.log_stats(
+        logger.store(
             iteration=i,
             episode_length=episode_length,
             episode_return=episode_return,

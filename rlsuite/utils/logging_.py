@@ -83,8 +83,8 @@ class Logger:
         self.log_headers = None
         self.counter = 0  # keeps track of how often log_stats is called
 
-    def log_stats(self, **stats):
-        """Log any number of experiment statistics.
+    def store(self, **stats):
+        """Store any number of experiment statistics.
 
         This will write the statistics from the most recent step to the output
         directory if one is specified.
