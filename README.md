@@ -15,6 +15,28 @@ This will automatically install any required dependencies.
 
 ## Usage
 
+There are three main modules in RL Suite: `rlsuite.algos`, `rlsuite.envs`, and `rlsuite.utils`. Algorithms are simply methods that you can import from `rlsuite.algos`. Environments can be used by importing the respective module and then calling `gym.make(env_name)`. The utilities module provides tools for logging, loading experiment data, and plotting results.
+
+The following snippet demonstrates an example workflow, in which we run the REINFORCE algorithm on the cart-pole environment described by Barto, Sutton, and Anderson (2018).
+
+```
+import gym
+import tensorflow as tf
+from rlsuite.algos import reinforce
+
+reinforce(
+    env_fn=lambda: gym.make('CartPole-v1'),
+    policy=tf.keras.Sequential([
+        layers.Dense(2, input_shape=(4,), activation='softmax'),
+    ]),
+    num_episodes=100,
+    data_dir='/tmp/experiments/reinforce',
+    log_freq=10,
+)
+```
+
+## Examples
+
 The following is a list of Jupyter notebooks that run through usage examples of RL Suite.
 
 - [Visualization](examples/visualization.ipynb)
