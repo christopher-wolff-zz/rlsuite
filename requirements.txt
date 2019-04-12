@@ -39,7 +39,7 @@ mistune==0.8.4
 more-itertools==6.0.0
 nbconvert==5.4.1
 nbformat==4.4.0
-notebook==5.7.7
+notebook==5.7.8
 numpy==1.16.2
 pandas==0.24.2
 pandocfilters==1.4.2
@@ -63,7 +63,7 @@ pytz==2018.9
 pyzmq==18.0.1
 qtconsole==4.4.3
 requests==2.21.0
--e git+https://github.com/christopher-wolff/lab2.git@262f10824b45829bc6e79492729c483f505a75a3#egg=rlsuite
+rlsuite==0.0.1
 scipy==1.2.1
 seaborn==0.9.0
 Send2Trash==1.5.0
