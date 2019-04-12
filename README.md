@@ -19,7 +19,7 @@ This will automatically install any required dependencies.
 
 ## Usage
 
-The following snippet demonstrates an example workflow, in which we run the REINFORCE algorithm (Williams, 1992) on the cart-pole environment described by Barto, Sutton, and Anderson (2018).
+The following snippet demonstrates an example workflow, in which we run the REINFORCE algorithm (Williams, 1992) on the cart-pole environment from OpenAI Gym described by Barto, Sutton, and Anderson (2018).
 
 ```python
 import gym
