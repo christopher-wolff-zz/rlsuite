@@ -15,7 +15,7 @@ This will automatically install any required dependencies.
 
 ## Usage
 
-There are three main modules in RL Suite: `rlsuite.algos`, `rlsuite.envs`, and `rlsuite.utils`. Algorithms are simply methods that you can import from `rlsuite.algos`. Environments can be used by importing the respective module and then calling `gym.make(env_name)`. The utilities module provides tools for logging, loading experiment data, and plotting results.
+There are three main modules in RL Suite: `rlsuite.algos`, `rlsuite.envs`, and `rlsuite.utils`. Algorithms are simply methods whose documentation can be found in the respective algorithm file. Environments can be used by importing the respective module and then calling `gym.make(env_name)`. The utilities module provides tools for logging, loading experiment data, and plotting results.
 
 The following snippet demonstrates an example workflow, in which we run the REINFORCE algorithm on the cart-pole environment described by Barto, Sutton, and Anderson (2018).
 
