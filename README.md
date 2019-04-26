@@ -47,6 +47,8 @@ plot_experiment(DATA_DIR, x='iteration', y='episode_return')
 The following is a list of Jupyter notebooks that run through usage examples of RL Suite.
 
 - [Visualization](examples/visualization.ipynb)
+- [REINFORCE](examples/reinforce.ipynb)
+- [Sarsa vs. Q-Learning](examples/sarsa_vs_qlearning.ipynb)
 
 ## Algorithms
 

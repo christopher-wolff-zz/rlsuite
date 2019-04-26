@@ -1,3 +1,4 @@
+import os
 import itertools
 import time
 
@@ -39,7 +40,8 @@ def qlearning(
     assert num_episodes > 0, 'num_episodes must be positive'
 
     # --- Initialization ---
-    logger = Logger(output_dir=data_dir, log_freq=log_freq)
+    train_logger = Logger(output_dir=os.path.join(data_dir), output_fname='train_statistics.tsv', log_freq=log_freq)
+    eval_logger = Logger(output_dir=os.path.join(data_dir), output_fname='eval_statistics.tsv', log_freq=log_freq)
 
     env = env_fn()
     num_states = env.observation_space.n
@@ -49,22 +51,21 @@ def qlearning(
     np.random.seed(seed)
 
     Q = np.zeros((num_states, num_actions))
-    pi = np.full((num_states, num_actions), 1 / num_actions)
+    behavior_policy = np.full((num_states, num_actions), 1 / num_actions)
+    target_policy = np.full((num_states, num_actions), 1 / num_actions)
 
     start_time = time.time()
 
     # --- Main loop ---
     for i in range(num_episodes):
-        # Initialize episode statistics
-        episode_length = 0
-        episode_return = 0
-
-        # Simulate one episode
+        # Simulate one episode using behavior policy
+        train_episode_length = 0
+        train_episode_return = 0
         state = env.reset()
         done = False
         while not done:
-            # Choose action from current policy
-            action = np.random.choice(num_actions, p=pi[state])
+            # Choose action from behavior policy
+            action = np.random.choice(num_actions, p=behavior_policy[state])
 
             # Take action in the environment
             next_state, reward, done, _ = env.step(action)
@@ -78,26 +79,51 @@ def qlearning(
             best_action = np.random.choice(best_actions)
             for a in np.arange(num_actions):
                 if a == best_action:
-                    pi[state, a] = 1 - epsilon + epsilon / num_actions
+                    behavior_policy[state, a] = 1 - epsilon + epsilon / num_actions
+                    target_policy[state, a] = 1
                 else:
-                    pi[state, a] = epsilon / num_actions
+                    behavior_policy[state, a] = epsilon / num_actions
+                    target_policy[state, a] = 0
 
             # Update state and statistics
             state = next_state
-            episode_length += 1
-            episode_return += reward
+            train_episode_length += 1
+            train_episode_return += reward
+
+        train_logger.store(
+            iteration=i,
+            episode_length=train_episode_length,
+            episode_return=train_episode_return,
+            time=time.time()-start_time,
+        )
+
+        # Simulate one episode using target policy
+        eval_episode_length = 0
+        eval_episode_return = 0
+        state = env.reset()
+        done = False
+        while not done:
+            # Choose action from target policy
+            action = np.random.choice(num_actions, p=target_policy[state])
+
+            # Take action in the environment
+            state, reward, done, _ = env.step(action)
+
+            # Update state and statistics
+            eval_episode_length += 1
+            eval_episode_return += reward
 
         # Log statistics
-        logger.store(
+        eval_logger.store(
             iteration=i,
-            episode_length=episode_length,
-            episode_return=episode_return,
+            episode_length=eval_episode_length,
+            episode_return=eval_episode_return,
             time=time.time()-start_time,
         )
 
     # --- Deinitialization ---
     env.close()
-    return Q, pi
+    return Q, target_policy
 
 
 if __name__ == '__main__':

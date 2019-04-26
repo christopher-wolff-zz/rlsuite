@@ -10,7 +10,7 @@ def mc_control(
     env_fn,
     epsilon=0.1,
     gamma=0.99,
-    num_iter=1000,
+    num_episodes=1000,
     method='first_visit',
     seed=0,
     data_dir=None,
@@ -22,7 +22,7 @@ def mc_control(
         env_fn (func): A function that creates an instance of an environment.
         epsilon (float): The exploration rate.
         gamma (float): The discount factor.
-        num_iter (int): The number of episodes to run.
+        num_episodes (int): The number of episodes to run.
         method (str): Either 'first_visit' or 'every_visit'.
         seed (int): A seed that fixes all randomness if possible.
         data_dir (str): Optional. A directory for storing experiment data.
@@ -35,7 +35,7 @@ def mc_control(
     # --- Parameter validation ---
     assert epsilon >= 0 and epsilon <= 1, 'epsilon must be in [0, 1]'
     assert gamma >= 0 and gamma <= 1, 'gamma must be in [0, 1]'
-    assert num_iter > 0, 'num_iter must be positive'
+    assert num_episodes > 0, 'num_episodes must be positive'
     assert method in ['first_visit', 'every_visit'], "method must be 'first_visit' or 'every_visit'"
 
     # --- Initialization ---
@@ -58,7 +58,7 @@ def mc_control(
     start_time = time.time()
 
     # --- Main loop ---
-    for i in range(num_iter):
+    for i in range(num_episodes):
         # Initialize episode statistics
         episode_return = 0
 
@@ -113,7 +113,7 @@ if __name__ == '__main__':
     parser.add_argument('--epsilon', type=float, default=0.1)
     parser.add_argument('--gamma', type=float, default=0.99)
     parser.add_argument('--method', type=str, default='first_visit')
-    parser.add_argument('--num_iter', type=int, default=100)
+    parser.add_argument('--num_episodes', type=int, default=100)
     parser.add_argument('--seed', '-s', type=int, default=0)
     parser.add_argument('--data_dir', type=str, default='/tmp/experiments/mc_control')
     parser.add_argument('--log_freq', type=int, default=0)
@@ -124,7 +124,7 @@ if __name__ == '__main__':
         epsilon=args.epsilon,
         gamma=args.gamma,
         method=args.method,
-        num_iter=args.num_iter,
+        num_episodes=args.num_episodes,
         seed=args.seed,
         data_dir=args.data_dir,
         log_freq=args.log_freq,

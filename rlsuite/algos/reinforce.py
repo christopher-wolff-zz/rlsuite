@@ -84,7 +84,7 @@ def reinforce(
             # Compute gradient of policy function
             weights = policy.trainable_weights
             with tf.GradientTape() as tape:
-                action_probs = tf.squeeze(policy(state.reshape(1, -1)))
+                action_probs = tf.squeeze(policy(transition.state.reshape(1, -1)))
                 chosen_action = action_probs[transition.action]
                 log_prob = tf.math.log(chosen_action)
             grads = tape.gradient(log_prob, weights)
@@ -98,6 +98,8 @@ def reinforce(
             iteration=i,
             episode_length=episode_length,
             episode_return=episode_return,
+            grad_norm=tf.linalg.global_norm(grads).numpy().item(),
+            theta_norm=tf.linalg.global_norm(weights).numpy().item(),
             time=time.time()-start_time,
         )
 
