@@ -49,6 +49,7 @@ The following is a list of Jupyter notebooks that run through usage examples of 
 - [Visualization](examples/visualization.ipynb)
 - [REINFORCE](examples/reinforce.ipynb)
 - [Sarsa vs. Q-Learning](examples/sarsa_vs_qlearning.ipynb)
+- [TD vs. MC](examples/td_vs_mc.ipynb)
 
 ## Algorithms
 
