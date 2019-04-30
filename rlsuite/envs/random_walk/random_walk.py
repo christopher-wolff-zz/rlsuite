@@ -21,9 +21,9 @@ def categorical_sample(prob_n, np_random):
 class RandomWalk(Env):
 
     def __init__(self, num_states=15):
-        assert num_states > 0, 'num_states must be greater than 0'
+        assert num_states > 2, 'num_states must be greater than 2'
 
-        self.nS = num_states + 2  # the additional goal states
+        self.nS = num_states
         self.nA = 2
 
         self.action_space = spaces.Discrete(self.nA)

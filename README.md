@@ -68,3 +68,9 @@ The following is a list of Jupyter notebooks that run through usage examples of 
 - [Least Squares Temporal Difference Learning](rlsuite/algos/lstd.py)
 - [TD(lambda)](rlsuite/algos/td_lambda.py)
 - [REINFORCE](rlsuite/algos/reinforce.py)
+
+## Environments
+
+- [Aliased Gridworld](rlsuite/envs/aliased_gridworld)
+- [Gridworld](rlsuite/envs/gridworld) (from Denny Britz at https://github.com/dennybritz/reinforcement-learning/blob/master/lib/envs/gridworld.py)
+- [Random Walk](rlsuite/envs/random_walk)
