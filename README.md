@@ -13,6 +13,7 @@ As of now, the package isn't published in PyPI yet, but you can still install it
 ```
 git clone https://github.com/christopher-wolff/rlsuite.git
 cd rlsuite
+pip install -r requirements.txt
 pip install .
 ```
 
